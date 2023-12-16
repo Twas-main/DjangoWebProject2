@@ -1,0 +1,34 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ thing.name }}</h2>
+{% if thing.image and thing.image.url != '/media/temp.jpg' %}
+<img src="{{ thing.image.url }}" alt="Картинка" width="300" height="200" />
+{% endif %}
+<p> {{thing.text|linebreaksbr}} </p>
+<a href="{% url 'add_to_cart' %}?product={{ thing.id }}" class="btn btn-success btn-buy"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span><span class="price">{{thing.price}} &#8381;</span></a>
+
+{% if user.is_authenticated %}
+<h3>Добавить комментарий</h3>
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        {{form.as_p}}
+        <button type="submit" class="save btn btn-default">Отправить комментарий</button>
+
+    </div>
+</form>
+{% else %}
+<h3>Для добавления комментария вам нужно зарегестрироваться</h3>
+{% endif %}
+
+{% for comment in comments %}
+<hr />
+<h7> {{comment.date}} </h7>
+<h5> {{comment.author}} </h5>
+<p> {{comment.text|linebreaksbr}} </p>
+{% endfor %}
+
+<p><a href="{% url 'shop' %}">Назад</a></p>
+{% endblock %}
